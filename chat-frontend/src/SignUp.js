@@ -1,15 +1,16 @@
-import React, {useState} from 'react'
-import { Form, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { Form } from "react-bootstrap";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { Navigate } from "react-router-dom";
 
-export default function SignUp() {
+export default function Signup() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-    const [register, setRegister] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const cookies = new Cookies();
     const token = cookies.get("TOKEN");
@@ -30,10 +31,15 @@ export default function SignUp() {
         e.preventDefault();
 
         if (password) {
+            if (password !== confirmPassword) {
+                setError('Passwords do not match')
+                return
+            }
+
             // make the API call
             axios(configuration)
             .then(() => {
-                setRegister(true);
+                setSuccess(true);
                 alert('Account registered successfully!')
                 window.location.href = "/";
             })
@@ -50,62 +56,60 @@ export default function SignUp() {
         return <Navigate to='/home' replace />
     }
 
+    if (success) {
+        return <Navigate to="/" />;
+    }
+
     return (
-        <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-            <div>
+        <div className="login-container">
+            <div className="login-box centered-box">
                 <h2>Sign Up</h2>
-                <Form onSubmit={(e)=>handleSubmit(e)}>
-                    {/* email */}
-                    <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter email"
-                    />
+                {error && <p className="error-message">{error}</p>}
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            className="input-field"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </Form.Group>
-
-                    {/* username */}
-                    <Form.Group controlId="formBasicUsername">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter username"
-                    />
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            className="input-field"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </Form.Group>
-
-                    {/* password */}
-                    <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter password"
-                    />
+                    <Form.Group>
+                        <Form.Control
+                            type="password"
+                            className="input-field"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </Form.Group>
-
-                    {/* submit button */}
-                    <Button
-                        variant="primary"
-                        type="submit"
-                        onClick={(e) => handleSubmit(e)}
-                    >
-                        Register
-                    </Button>
-                    {register ? (
-                        <p className="text-success">You Are Registered Successfully</p>
-                    ) : (
-                        <p className="text-danger">{error}</p>
-                    )}
-                    <label>Already have an account? <a href='/'>Log In</a> now</label>
+                    <Form.Group>
+                        <Form.Control
+                            type="password"
+                            className="input-field"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <button type="submit" className="login-button">Sign Up</button>
                 </Form>
+                <label>
+                    Already have an account?
+                    <Link to="/">
+                        Login
+                    </Link>
+                </label>
             </div>
         </div>
     )

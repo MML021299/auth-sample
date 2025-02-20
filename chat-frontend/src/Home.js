@@ -85,17 +85,17 @@ export default function Home() {
                 <button onClick={logout}>Logout</button>
             </div>
             <div className="app">
-            <div className="chat-container">
-                <ContactList users={users} currentUser={currentUser} onSelect={handleSelectContact} />
-                {selectedContact && (
-                    <ChatWindow
-                        currentUser={currentUser}
-                        contact={selectedContact}
-                        messages={chatHistory[selectedContact.id] || []}
-                        onSend={handleSendMessage}
-                    />
-                )}
-            </div>
+                <div className="chat-container">
+                    <ContactList users={users} currentUser={currentUser} onSelect={handleSelectContact} />
+                    {selectedContact && (
+                        <ChatWindow
+                            currentUser={currentUser}
+                            contact={selectedContact}
+                            messages={chatHistory[selectedContact.id] || []}
+                            onSend={handleSendMessage}
+                        />
+                    )}
+                </div>
             </div>
         </>
     );

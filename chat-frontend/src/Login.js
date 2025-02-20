@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
-import { Form, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Navigate, Link } from "react-router-dom";
+import { Form } from "react-bootstrap";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { Navigate } from "react-router-dom";
-
 import io from "socket.io-client";
 
 export default function Login() {
@@ -28,9 +27,9 @@ export default function Login() {
         "http://localhost:3002",
         { transports: ["websocket"] },
         { autoConnect: false }
-      );
+    );
 
-    const handleSubmit = (e) => {
+    const handleLogin = (e) => {
         // prevent the form from refreshing the whole page
         e.preventDefault();
         // make the API call
@@ -57,49 +56,32 @@ export default function Login() {
     }
 
     return (
-        <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-            <div>
+        <div className="login-container">
+            <div className="login-box centered-box">
                 <h2>Login</h2>
-                <Form onSubmit={(e)=>handleSubmit(e)}>
-                    {/* username */}
-                    <Form.Group controlId="formBasicUsername">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter username"
-                    />
+                {error && <p className="error-message">{error}</p>}
+                <Form onSubmit={handleLogin}>
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            className="input-field"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </Form.Group>
-
-                    {/* password */}
-                    <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                    />
+                    <Form.Group>
+                        <Form.Control
+                            type="password"
+                            className="input-field"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </Form.Group>
-
-                    {/* submit button */}
-                    <Button
-                        variant="primary"
-                        type="submit"
-                        onClick={(e) => handleSubmit(e)}
-                    >
-                        Login
-                    </Button>
-                    {login ? (
-                        <p className="text-success">You Are Logged in Successfully</p>
-                    ) : (
-                        <p className="text-danger">{error}</p>
-                    )}
-                    <label>Don't have an account? <a href='/signup'>Sign Up</a> now</label>
+                    <button type="submit" className="login-button">Login</button>
                 </Form>
+                <Link to="/signup" className="signup-button">Signup</Link>
             </div>
         </div>
     )
